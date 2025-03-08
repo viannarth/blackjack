@@ -15,6 +15,6 @@ This is a Python project consisting of a simple version of the game Blackjack an
 
 ## How to play
 
-Clone this project to a folder and execute the `Blackjack` file.
+Clone this project to a folder and run the `main.py` file. You may have Python installed in your computer.
 
 Have fun!

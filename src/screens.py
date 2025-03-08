@@ -361,8 +361,10 @@ class InRound(Screen):
             user_input = input("Select an option: ")
             if user_input == "1":
                 game.get_wallet().choose_insurance_bet = True
+                print("\nGreat! You bet for the dealer's blackjack. Let's check after your play if you will win this bet.")
             elif user_input == "2":
                 game.get_wallet().choose_insurance_bet = False
+                print("\nOk, so you don't wanna take any risks...")
 
     def first_question(self, manager:ScreenManager, deck:Deck, player:Player, dealer:Dealer, game:Game):
             print("\nThe dealer asks you whether you want another card of the deck.")
@@ -451,10 +453,11 @@ class InRound(Screen):
         self.finish_round(manager, player, dealer, game)
 
     def player_bust(self, manager:ScreenManager, player:Player, dealer:Dealer, game:Game):
-        game.get_wallet().loss(game)
-        print("\nYou bust! What an idiot... Be more careful next time.")
-        print(f"\nYou lose {-game.get_wallet().profit}$.")
+        if game.get_wallet().choose_insurance_bet: 
+            self.dealer_reveal_card(dealer, game)
 
+        print("\nYou bust! What an idiot... Be more careful next time.")
+        self.round_result(player, dealer, game)
         self.finish_round(manager, player, dealer, game)
 
     def dealer_soft_17(self, deck:Deck, dealer:Dealer, game:Game):
@@ -499,10 +502,10 @@ class InRound(Screen):
             if game.get_wallet().choose_insurance_bet:
                 game.get_wallet().insurance_bet(True)
                 print(f"\nCongrats! You win your insurance bet. You received {INSURANCE_BET}$.")
-            
-        if game.get_wallet().choose_insurance_bet:
-            game.get_wallet().insurance_bet(False)
-            print(f"\nThe dealer does not have a blackjack, so you lost your bet. Less {INSURANCE_BET}$ in your account. Fool.")
+        else:
+            if game.get_wallet().choose_insurance_bet:
+                game.get_wallet().insurance_bet(False)
+                print(f"\nThe dealer does not have a blackjack, so you lost your bet. Less {INSURANCE_BET}$ in your account. Fool.")
 
         input("\nPress Enter to continue. ")
 
@@ -510,15 +513,13 @@ class InRound(Screen):
         if game.check_round_status(player, dealer) == RoundStatus.LOSS:
             game.get_wallet().loss(game)
             print("\nYou lost. Moron.")
-            print(f"\nYou lose {-game.get_wallet().profit}$.")
         elif game.check_round_status(player, dealer) == RoundStatus.PUSH:
             game.get_wallet().push(game)
             print("\nIt is a push! That was close.")
-            print(f"\nYou get your {game.get_wallet().initial_bet}$ bet back.")
         elif game.check_round_status(player, dealer) == RoundStatus.WIN:
             game.get_wallet().win(game)
             print("\nCongrats! You win. You are lucky.")
-            print(f"\nYou win {game.get_wallet().profit}$.")
+        print(f"\nYour profit for the round is {game.get_wallet().profit}$.")
 
     def finish_round(self, manager:ScreenManager, player:Player, dealer:Dealer, game:Game):
         game.finish_round(player, dealer)

@@ -10,32 +10,33 @@ class Wallet(object):
         self.profit:float = 0
         self.choose_insurance_bet:bool = False
     
+    def new_bet(self):
+        self.choose_insurance_bet = False
+        self.profit = 0
+    
     def set_initial_bet(self, input:str):
+        self.new_bet()
         self.initial_bet = INITIAL_BET[input]
     
     def finish_bet(self, profit:float, game):
-        self.profit = profit
-        game.set_round_profit(profit)
-        self.choose_insurance_bet = False
+        self.profit += profit
+        self.balance += self.profit
+        game.set_round_profit(self.profit)
     
     def win(self, game):
         profit:float = self.initial_bet
-        self.balance += profit
         self.finish_bet(profit, game)
     
     def loss(self, game):
         profit:float = -self.initial_bet
-        self.balance += profit
         self.finish_bet(profit, game)
 
     def push(self, game):
         profit:float = 0 * self.initial_bet
-        self.balance += profit
         self.finish_bet(profit, game)
     
     def surrender(self, game):
         profit:float = -0.5 * self.initial_bet
-        self.balance += profit
         self.finish_bet(profit, game)
 
     def insurance_bet(self, check_win:bool):

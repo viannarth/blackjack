@@ -1,0 +1,6 @@
+# Python cache folder
+__pycache__/
+# Virtual environment folder
+.venv/
+# Tests folder
+tests/

@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 # Tests folder
 tests/
+# User save files
+usr/*

@@ -8,6 +8,7 @@ from datetime import datetime
 import json
 import os.path
 
+USR_PATH = "./usr"
 ROUND_HISTORY_FILE = "./usr/round_history.json"
 GAME_HISTORY_FILE = "./usr/game_history.json"
 
@@ -112,6 +113,9 @@ class Game(object):
     def save_progress(self):
         data = [round.to_dict() for round in self.round_history]
 
+        if not os.path.exists(USR_PATH):
+            os.makedirs(USR_PATH)
+
         with open(ROUND_HISTORY_FILE, "w") as data_file:
             json.dump(data, data_file)
 
@@ -146,6 +150,9 @@ class Game(object):
     def save_game(self):
         self.game_history.append(self.game_info())
 
+        if not os.path.exists(USR_PATH):
+            os.makedirs(USR_PATH)
+        
         with open(GAME_HISTORY_FILE, "w") as data_file:
             json.dump(self.game_history, data_file)
 
